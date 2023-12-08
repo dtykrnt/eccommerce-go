@@ -30,8 +30,9 @@ func (p *productRepository) CreateProduct(ctx context.Context, product Product) 
 		Name:        product.Name,
 		Price:       product.Price,
 		Description: product.Description,
+		IsActive:    product.IsActive,
 	}
-	if err := p.db.WithContext(ctx).Create(&newProduct).Error; err != nil {
+	if err := p.db.WithContext(ctx).Create(&product).Error; err != nil {
 		return nil, err
 	}
 	result := Product(newProduct)
@@ -75,6 +76,7 @@ func (p *productRepository) UpdateProductById(ctx context.Context, id uint, prod
 	existingProduct.Name = product.Name
 	existingProduct.Price = product.Price
 	existingProduct.Description = product.Description
+	existingProduct.IsActive = product.IsActive
 
 	if err := p.db.WithContext(ctx).Save(&existingProduct).Error; err != nil {
 		return nil, err
