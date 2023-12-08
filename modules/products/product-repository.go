@@ -27,10 +27,12 @@ func NewProductRepository(db *gorm.DB) *productRepository {
 
 func (p *productRepository) CreateProduct(ctx context.Context, product Product) (*Product, error) {
 	newProduct := Product{
-		Name:  product.Name,
-		Price: product.Price,
+		Name:        product.Name,
+		Price:       product.Price,
+		Description: product.Description,
+		IsActive:    product.IsActive,
 	}
-	if err := p.db.WithContext(ctx).Create(&newProduct).Error; err != nil {
+	if err := p.db.WithContext(ctx).Create(&product).Error; err != nil {
 		return nil, err
 	}
 	result := Product(newProduct)
@@ -73,6 +75,8 @@ func (p *productRepository) UpdateProductById(ctx context.Context, id uint, prod
 
 	existingProduct.Name = product.Name
 	existingProduct.Price = product.Price
+	existingProduct.Description = product.Description
+	existingProduct.IsActive = product.IsActive
 
 	if err := p.db.WithContext(ctx).Save(&existingProduct).Error; err != nil {
 		return nil, err
@@ -86,7 +90,7 @@ func (p *productRepository) UpdateProductById(ctx context.Context, id uint, prod
 }
 
 func (p *productRepository) DeleteProductById(ctx context.Context, id uint) (any, error) {
-	var product Product
+
 	existingProduct, err := p.GetProductById(ctx, id)
 	if err != nil {
 		return nil, err
@@ -96,5 +100,5 @@ func (p *productRepository) DeleteProductById(ctx context.Context, id uint) (any
 		return nil, err
 	}
 
-	return &product, nil
+	return nil, nil
 }

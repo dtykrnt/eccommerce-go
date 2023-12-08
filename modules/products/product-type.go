@@ -1,7 +1,10 @@
 package products
 
 type Product struct {
-	ID    uint   `json:"id"`
-	Name  string `json:"name"`
-	Price string `json:"price"`
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Price       int    `json:"price"`
+	Description string `json:"description"`
+	IsActive    bool   `json:"is_active"`
+	Stocks      int    `json:"stocks"`
 }

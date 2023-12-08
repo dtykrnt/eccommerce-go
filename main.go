@@ -67,7 +67,7 @@ func productGroup(db *gorm.DB, r *gin.Engine) {
 	productService := products.NewProductService(productRepo)
 	productHandler := products.NewProductHandler(productService)
 
-	productRoutes := r.Group("v1/products")
+	productRoutes := r.Group("api/v1/products")
 	{
 		productRoutes.POST("/", productHandler.CreateProduct)
 		productRoutes.GET("/", productHandler.GetAllProducts)
