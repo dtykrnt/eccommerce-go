@@ -2,8 +2,7 @@ package configs
 
 import (
 	"fmt"
-	"golang-basic/modules/customers"
-	"golang-basic/modules/products"
+	"golang-basic/models"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -28,8 +27,9 @@ func InitDB() (*gorm.DB, error) {
 
 	fmt.Println("Connection Database Success ...")
 
-	db.AutoMigrate(&customers.Customer{})
-	db.AutoMigrate(&products.Product{})
-
+	db.AutoMigrate(&models.Products{})
+	db.AutoMigrate(&models.Orders{})
+	db.AutoMigrate(&models.Customers{})
+	db.AutoMigrate(&models.OrderItems{})
 	return db, nil
 }

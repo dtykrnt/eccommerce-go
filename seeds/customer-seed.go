@@ -1,7 +1,7 @@
 package seeds
 
 import (
-	"golang-basic/modules/customers"
+	"golang-basic/models"
 
 	"github.com/go-faker/faker/v4"
 	"gorm.io/gorm"
@@ -14,7 +14,7 @@ type Seed struct {
 
 func (s Seed) CustomerSeed() {
 	for i := 0; i <= 10; i++ {
-		cust := customers.Customer{Name: faker.Name(), Email: faker.Email()}
+		cust := models.Customers{Name: faker.Name(), Email: faker.Email()}
 		s.db.Create(&cust)
 	}
 }

@@ -27,30 +27,31 @@ func NewProductHandler(productService IProductService) *productHandler {
 }
 
 func (h *productHandler) CreateProduct(c *gin.Context) {
-	var product Product
+	var product Products
 	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		c.JSON(http.StatusBadRequest, responses.NewErrorResponse(err.Error()))
 		return
 	}
 
 	createdProduct, err := h.productService.CreateProduct(c.Request.Context(), product)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating product"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, responses.NewSuccessResponse("Success Create Product", createdProduct))
+	c.JSON(http.StatusCreated, responses.NewSuccessResponse("Success Create Products", createdProduct))
 
 }
 
 func (h *productHandler) GetAllProducts(c *gin.Context) {
-	var products []Product
+	var products []Products
 	products, err := h.productService.GetAllProduct(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating product"})
 		return
 	}
-	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get All Product", products))
+	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get All Products", products))
 }
 
 func (h *productHandler) GetProductById(c *gin.Context) {
@@ -60,11 +61,11 @@ func (h *productHandler) GetProductById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error get product"})
 		return
 	}
-	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get Product", product))
+	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get Products", product))
 }
 
 func (h *productHandler) UpdateProductById(c *gin.Context) {
-	var product Product
+	var product Products
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
@@ -76,7 +77,7 @@ func (h *productHandler) UpdateProductById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error get product"})
 		return
 	}
-	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get Update Product", updatedProduct))
+	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Get Update Products", updatedProduct))
 }
 
 func (h *productHandler) DeleteProductById(c *gin.Context) {
@@ -86,5 +87,5 @@ func (h *productHandler) DeleteProductById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error get product"})
 		return
 	}
-	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Delete Product", product))
+	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Delete Products", product))
 }

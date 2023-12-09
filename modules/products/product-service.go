@@ -1,12 +1,14 @@
 package products
 
-import "context"
+import (
+	"context"
+)
 
 type IProductService interface {
-	CreateProduct(ctx context.Context, product Product) (*Product, error)
-	GetAllProduct(ctx context.Context) ([]Product, error)
-	GetProductById(ctx context.Context, id uint) (*Product, error)
-	UpdateProductById(ctx context.Context, id uint, product Product) (*Product, error)
+	CreateProduct(ctx context.Context, product Products) (*Products, error)
+	GetAllProduct(ctx context.Context) ([]Products, error)
+	GetProductById(ctx context.Context, id uint) (*Products, error)
+	UpdateProductById(ctx context.Context, id uint, product Products) (*Products, error)
 	DeleteProductById(ctx context.Context, id uint) (any, error)
 }
 
@@ -20,19 +22,19 @@ func NewProductService(productRepository IProductRepository) *productService {
 	}
 }
 
-func (p *productService) CreateProduct(ctx context.Context, product Product) (*Product, error) {
+func (p *productService) CreateProduct(ctx context.Context, product Products) (*Products, error) {
 	return p.productRepository.CreateProduct(ctx, product)
 }
 
-func (p *productService) GetAllProduct(ctx context.Context) ([]Product, error) {
+func (p *productService) GetAllProduct(ctx context.Context) ([]Products, error) {
 	return p.productRepository.GetAllProduct(ctx)
 }
 
-func (p *productService) GetProductById(ctx context.Context, id uint) (*Product, error) {
+func (p *productService) GetProductById(ctx context.Context, id uint) (*Products, error) {
 	return p.productRepository.GetProductById(ctx, id)
 }
 
-func (p *productService) UpdateProductById(ctx context.Context, id uint, product Product) (*Product, error) {
+func (p *productService) UpdateProductById(ctx context.Context, id uint, product Products) (*Products, error) {
 	return p.productRepository.UpdateProductById(ctx, id, product)
 }
 

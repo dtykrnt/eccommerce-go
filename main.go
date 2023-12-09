@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"golang-basic/configs"
+	"golang-basic/modules/orders"
 	"golang-basic/modules/products"
 	"golang-basic/seeds"
 	"net/http"
@@ -54,6 +55,7 @@ func handleRouting(db *gorm.DB) {
 
 	productGroup(db, r)
 	customerGroup(r)
+	orderGroup(db, r)
 
 	r.Run()
 }
@@ -84,5 +86,18 @@ func customerGroup(r *gin.Engine) {
 		customerRoutes.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, &gin.H{"customer": "customer"})
 		})
+	}
+}
+
+func orderGroup(db *gorm.DB, r *gin.Engine) {
+	orderRepo := orders.NewOrderRepository(db)
+	orderService := orders.NewOrderService(orderRepo)
+	orderHandler := orders.NewOrderHandler(orderService)
+
+	customerRoutes := r.Group("api/v1/orders")
+
+	{
+		customerRoutes.POST("/", orderHandler.CreateOrder)
+		customerRoutes.GET("/", orderHandler.GetAllOrder)
 	}
 }
