@@ -11,6 +11,7 @@ import (
 type IOrderHandler interface {
 	CreateOrder(c *gin.Context)
 	GetAllOrder(c *gin.Context)
+	GetAllOrderItems(c *gin.Context)
 	UpdateOrder(c *gin.Context)
 	DeleteOrder(c *gin.Context)
 }
@@ -46,5 +47,13 @@ func (h *orderHandler) GetAllOrder(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, responses.NewErrorResponse(err.Error()))
 	}
-	c.JSON(http.StatusAccepted, order)
+	c.JSON(http.StatusAccepted, responses.NewSuccessResponse("Success get Orders", order))
+}
+
+func (h *orderHandler) GetAllOrderItems(c *gin.Context) {
+	order, err := h.orderService.GetAllOrderItems(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, responses.NewErrorResponse(err.Error()))
+	}
+	c.JSON(http.StatusAccepted, responses.NewSuccessResponse("Success get Orders", order))
 }

@@ -12,6 +12,4 @@ type Products struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
-
-	Orders []Orders `gorm:"many2many:order_items;"`
 }

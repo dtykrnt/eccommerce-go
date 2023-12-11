@@ -32,15 +32,16 @@ type Orders struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Items     []Products `json:"items" gorm:"many2many:order_items;foreignkey:id;association_foreignkey:products_id;"`
+	Items     []*OrderItems `json:"items"`
 }
 
 type OrderItems struct {
-	ID        uint    `json:"id" gorm:"primaryKey;autoIncrement;"`
-	OrderID   uint    `json:"orders_id" gorm:"foreignKey;column:orders_id;"`
-	ProductID uint    `json:"products_id" gorm:"foreignKey;column:products_id;"`
-	Quantity  int     `json:"quantity" gorm:"column:quantity;"`
-	Price     float64 `json:"price"`
+	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement;"`
+	OrderID   uint      `json:"orders_id" gorm:"foreignKey;column:orders_id;"`
+	ProductID uint      `json:"products_id" gorm:"foreignKey;column:products_id;"`
+	Quantity  int       `json:"quantity" gorm:"column:quantity;"`
+	Price     float64   `json:"price"`
+	Products  *Products `json:"products"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

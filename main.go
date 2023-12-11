@@ -14,12 +14,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func main() {
+func init() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
 		panic(err)
 	}
+}
+
+func main() {
 
 	handleInit()
 }
@@ -99,5 +102,6 @@ func orderGroup(db *gorm.DB, r *gin.Engine) {
 	{
 		customerRoutes.POST("/", orderHandler.CreateOrder)
 		customerRoutes.GET("/", orderHandler.GetAllOrder)
+		customerRoutes.GET("/items", orderHandler.GetAllOrderItems)
 	}
 }
