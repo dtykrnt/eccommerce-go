@@ -7,6 +7,7 @@ import (
 
 type IOrderService interface {
 	GetAllOrder(ctx context.Context) ([]Orders, error)
+	GetAllOrderItems(ctx context.Context) ([]OrderItems, error)
 	GetOrderById(ctx context.Context, order Orders) (*Orders, error)
 	UpdateOrder(ctx context.Context, order Orders) (*Orders, error)
 	CreateOrder(ctx context.Context, order requests.CreateOrderRequest) (*Orders, error)
@@ -44,4 +45,8 @@ func (o *orderService) GetAllOrder(ctx context.Context) ([]Orders, error) {
 
 func (o *orderService) CreateOrder(ctx context.Context, order requests.CreateOrderRequest) (*Orders, error) {
 	return o.orderRepository.CreateOrder(ctx, order)
+}
+
+func (o *orderService) GetAllOrderItems(ctx context.Context) ([]OrderItems, error) {
+	return o.orderRepository.GetAllOrderItems(ctx)
 }

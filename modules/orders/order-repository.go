@@ -14,6 +14,7 @@ type Orders models.Orders
 type OrderItems models.OrderItems
 type IOrderRepository interface {
 	GetAllOrder(ctx context.Context) ([]Orders, error)
+	GetAllOrderItems(ctx context.Context) ([]OrderItems, error)
 	GetOrderById(ctx context.Context, order Orders) (*Orders, error)
 	UpdateOrder(ctx context.Context, order Orders) (*Orders, error)
 	CreateOrder(ctx context.Context, order requests.CreateOrderRequest) (*Orders, error)
@@ -46,50 +47,20 @@ func NewOrderRepository(db *gorm.DB) *orderRepository {
 func (p *orderRepository) GetAllOrder(ctx context.Context) ([]Orders, error) {
 	var orders []Orders
 
-	if err := p.db.WithContext(ctx).Preload("Items").Find(&orders).Error; err != nil {
+	if err := p.db.WithContext(ctx).Preload("Items").Preload("Items.Products").Find(&orders).Error; err != nil {
 		return nil, err
 	}
 
-	var result []Orders
-	for _, order := range orders {
-		var product []models.Products
-		for _, item := range order.Items {
-			newItem := &models.OrderItems{}
-
-			p.db.WithContext(ctx).Debug().Where("products_id = ? AND orders_id =? ", item.ID, order.ID).First(&newItem)
-
-			product = append(product, models.Products{
-				Name:        item.Name,
-				Stocks:      newItem.Quantity,
-				ID:          item.ID,
-				IsActive:    item.IsActive,
-				CreatedAt:   item.CreatedAt,
-				UpdatedAt:   item.UpdatedAt,
-				Description: item.Description,
-				Price:       item.Price})
-		}
-		order.Items = product
-
-		result = append(result, Orders(order))
-	}
-
-	return result, nil
+	return orders, nil
 }
 
-func (p *orderRepository) GetAllOrderItem(ctx context.Context) ([]OrderItems, error) {
+func (p *orderRepository) GetAllOrderItems(ctx context.Context) ([]OrderItems, error) {
 	var orders []OrderItems
-	if err := p.db.WithContext(ctx).Preload("OrderItems.Product", func(db *gorm.DB) *gorm.DB {
-		return db.Joins("LEFT JOIN order_items")
-	}).Find(&orders).Error; err != nil {
+	if err := p.db.WithContext(ctx).Find(&orders).Error; err != nil {
 		return nil, err
 	}
 
-	var result []OrderItems
-	for _, o := range orders {
-		result = append(result, OrderItems(o))
-	}
-
-	return result, nil
+	return orders, nil
 }
 
 func (p *orderRepository) CreateOrder(ctx context.Context, order requests.CreateOrderRequest) (*Orders, error) {
