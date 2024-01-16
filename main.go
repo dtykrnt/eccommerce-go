@@ -60,7 +60,7 @@ func handleRouting(db *gorm.DB) {
 	customerGroup(r)
 	orderGroup(db, r)
 
-	r.Run()
+	r.Run(":3000")
 }
 
 func setupGin() *gin.Engine {

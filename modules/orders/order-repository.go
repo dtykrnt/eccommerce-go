@@ -7,6 +7,7 @@ import (
 	"golang-basic/requests"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
@@ -95,7 +96,12 @@ func (p *orderRepository) CreateOrder(ctx context.Context, order requests.Create
 			ProductID: product.ProductID,
 			Quantity:  product.Quantity,
 		}
-		fmt.Println("ORDER ITEM")
+
+		validate := validator.New()
+
+		if err := validate.Struct(orderItem); err != nil {
+			fmt.Println(err)
+		}
 
 		if err := tx.Create(&orderItem).Error; err != nil {
 			fmt.Println("FAILED CRETE ORDER ITEM")

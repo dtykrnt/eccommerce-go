@@ -9,6 +9,7 @@ type Products struct {
 	Description string  `json:"description" binding:"required"`
 	IsActive    bool    `json:"is_active" gorm:"default:true"`
 	Stocks      int     `json:"stocks"`
+	Image       string  `json:"image"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

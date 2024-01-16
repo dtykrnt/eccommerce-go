@@ -1,8 +1,10 @@
 package products
 
 import (
+	"fmt"
 	"golang-basic/responses"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +30,14 @@ func NewProductHandler(productService IProductService) *productHandler {
 
 func (h *productHandler) CreateProduct(c *gin.Context) {
 	var product Products
+
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.JSON(http.StatusBadRequest, responses.NewErrorResponse(err.Error()))
 		return
 	}
+	image, _ := DecodeAndSaveImage(product.Image)
+	fmt.Println("image")
+	fmt.Println(image)
 
 	createdProduct, err := h.productService.CreateProduct(c.Request.Context(), product)
 
@@ -42,6 +48,26 @@ func (h *productHandler) CreateProduct(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, responses.NewSuccessResponse("Success Create Products", createdProduct))
 
+}
+
+func DecodeAndSaveImage(base64Image string) (string, error) {
+	return base64Image, nil
+}
+
+// Add a function to save the file to disk
+func SaveFile(filePath string, data []byte) error {
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (h *productHandler) GetAllProducts(c *gin.Context) {

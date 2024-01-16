@@ -1,6 +1,10 @@
 package responses
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"reflect"
+)
 
 type Response struct {
 	Success bool        `json:"success"`
@@ -10,6 +14,8 @@ type Response struct {
 
 func NewSuccessResponse(message string, data interface{}) *Response {
 	prefix := os.Getenv("PROJECT")
+	dataType := reflect.TypeOf(data).Kind()
+	fmt.Println(dataType)
 	return &Response{
 		Success: true,
 		Message: prefix + ": " + message,

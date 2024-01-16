@@ -3,6 +3,7 @@ package products
 import (
 	"context"
 	"fmt"
+	"golang-basic/configs"
 	"golang-basic/models"
 
 	"gorm.io/gorm"
@@ -28,8 +29,8 @@ func NewProductRepository(db *gorm.DB) *productRepository {
 }
 
 func (p *productRepository) CreateProduct(ctx context.Context, product Products) (*Products, error) {
-
-	if err := p.db.WithContext(ctx).Create(&product).Error; err != nil {
+	c := p.db.WithContext(ctx)
+	if err := c.Create(&product).Error; err != nil {
 		return nil, err
 	}
 
@@ -38,7 +39,8 @@ func (p *productRepository) CreateProduct(ctx context.Context, product Products)
 
 func (p *productRepository) GetAllProduct(ctx context.Context) ([]Products, error) {
 	var products []Products
-	if err := p.db.WithContext(ctx).Find(&products).Error; err != nil {
+	db := p.db.WithContext(ctx)
+	if err := db.Scopes(configs.Pagination(5, 1).Result).Find(&products).Error; err != nil {
 		return nil, err
 	}
 
@@ -65,10 +67,7 @@ func (p *productRepository) UpdateProductById(ctx context.Context, id uint, prod
 		return nil, err
 	}
 
-	existingProduct.Name = product.Name
-	existingProduct.Price = product.Price
-	existingProduct.Description = product.Description
-	existingProduct.IsActive = product.IsActive
+	existingProduct = &product
 
 	if err := p.db.WithContext(ctx).Save(&existingProduct).Error; err != nil {
 		return nil, err

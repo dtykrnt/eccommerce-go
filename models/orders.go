@@ -37,10 +37,10 @@ type Orders struct {
 
 type OrderItems struct {
 	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement;"`
-	OrderID   uint      `json:"orders_id" gorm:"foreignKey;column:orders_id;"`
-	ProductID uint      `json:"products_id" gorm:"foreignKey;column:products_id;"`
-	Quantity  int       `json:"quantity" gorm:"column:quantity;"`
-	Price     float64   `json:"price"`
+	OrderID   uint      `json:"orders_id" gorm:"foreignKey;column:orders_id;" validate:"required"`
+	ProductID uint      `json:"products_id" gorm:"foreignKey;column:products_id;" validate:"required"`
+	Quantity  int       `json:"quantity" gorm:"column:quantity;" validate:"required"`
+	Price     float64   `json:"price" validate:"required"`
 	Products  *Products `json:"products"`
 
 	CreatedAt time.Time
