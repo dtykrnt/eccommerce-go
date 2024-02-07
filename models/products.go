@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Products struct {
 	ID          uint    `json:"id"`
@@ -9,8 +13,9 @@ type Products struct {
 	Description string  `json:"description" binding:"required"`
 	IsActive    bool    `json:"is_active" gorm:"default:true"`
 	Stocks      int     `json:"stocks"`
-	Image       string  `json:"image"`
+	Image       *string `json:"image" gorm:"default:null"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }

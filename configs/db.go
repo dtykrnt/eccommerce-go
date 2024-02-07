@@ -31,5 +31,9 @@ func InitDB() (*gorm.DB, error) {
 	db.AutoMigrate(&models.Orders{})
 	db.AutoMigrate(&models.Customers{})
 	db.AutoMigrate(&models.OrderItems{})
+	db.AutoMigrate(&models.Users{})
+
+	fmt.Println("Database Migrate Success ...")
+
 	return db, nil
 }

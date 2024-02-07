@@ -30,6 +30,15 @@ func NewProductRepository(db *gorm.DB) *productRepository {
 
 func (p *productRepository) CreateProduct(ctx context.Context, product Products) (*Products, error) {
 	c := p.db.WithContext(ctx)
+
+	image, err := configs.SaveImageBase64ToLocal(*product.Image, "products")
+
+	product.Image = configs.LoadImage(*image)
+
+	if err != nil {
+		panic(err)
+	}
+
 	if err := c.Create(&product).Error; err != nil {
 		return nil, err
 	}
@@ -40,12 +49,14 @@ func (p *productRepository) CreateProduct(ctx context.Context, product Products)
 func (p *productRepository) GetAllProduct(ctx context.Context) ([]Products, error) {
 	var products []Products
 	db := p.db.WithContext(ctx)
-	if err := db.Scopes(configs.Pagination(5, 1).Result).Find(&products).Error; err != nil {
+	if err := db.Find(&products).Error; err != nil {
 		return nil, err
 	}
 
 	var result []Products
 	for _, gw := range products {
+		img := configs.LoadImage(*gw.Image)
+		gw.Image = img
 		result = append(result, Products(gw))
 	}
 
@@ -58,6 +69,9 @@ func (p *productRepository) GetProductById(ctx context.Context, id uint) (*Produ
 		return nil, err
 	}
 	result := Products(product)
+	var imageUrl = *result.Image
+	result.Image = &imageUrl
+
 	return &result, nil
 }
 
@@ -83,6 +97,7 @@ func (p *productRepository) UpdateProductById(ctx context.Context, id uint, prod
 func (p *productRepository) DeleteProductById(ctx context.Context, id uint) (any, error) {
 
 	existingProduct, err := p.GetProductById(ctx, id)
+
 	if err != nil {
 		return nil, err
 	}

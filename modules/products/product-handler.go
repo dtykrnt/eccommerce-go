@@ -1,10 +1,8 @@
 package products
 
 import (
-	"fmt"
 	"golang-basic/responses"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -35,9 +33,6 @@ func (h *productHandler) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responses.NewErrorResponse(err.Error()))
 		return
 	}
-	image, _ := DecodeAndSaveImage(product.Image)
-	fmt.Println("image")
-	fmt.Println(image)
 
 	createdProduct, err := h.productService.CreateProduct(c.Request.Context(), product)
 
@@ -48,26 +43,6 @@ func (h *productHandler) CreateProduct(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, responses.NewSuccessResponse("Success Create Products", createdProduct))
 
-}
-
-func DecodeAndSaveImage(base64Image string) (string, error) {
-	return base64Image, nil
-}
-
-// Add a function to save the file to disk
-func SaveFile(filePath string, data []byte) error {
-	file, err := os.Create(filePath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = file.Write(data)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (h *productHandler) GetAllProducts(c *gin.Context) {
@@ -108,10 +83,14 @@ func (h *productHandler) UpdateProductById(c *gin.Context) {
 
 func (h *productHandler) DeleteProductById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	product, err := h.productService.DeleteProductById(c.Request.Context(), uint(id))
+	_, err := h.productService.DeleteProductById(c.Request.Context(), uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error get product"})
 		return
 	}
-	c.JSON(http.StatusOK, responses.NewSuccessResponse("Success Delete Products", product))
+	c.JSON(http.StatusOK, responses.Response{
+		Success: true,
+		Message: "ECCOM" + "Succees Delete Product",
+		Data:    nil,
+	})
 }

@@ -26,17 +26,14 @@ type orderRepository struct {
 	db *gorm.DB
 }
 
-// DeleteOrder implements IOrderRepository.
 func (*orderRepository) DeleteOrder(ctx context.Context, order Orders) (any, error) {
 	panic("unimplemented")
 }
 
-// GetOrderById implements IOrderRepository.
 func (*orderRepository) GetOrderById(ctx context.Context, order Orders) (*Orders, error) {
 	panic("unimplemented")
 }
 
-// UpdateOrder implements IOrderRepository.
 func (*orderRepository) UpdateOrder(ctx context.Context, order Orders) (*Orders, error) {
 	panic("unimplemented")
 }
@@ -82,13 +79,11 @@ func (p *orderRepository) CreateOrder(ctx context.Context, order requests.Create
 		OrderDate:   time.Now(),
 		OrderStatus: models.Pending,
 	}
+
 	if err := tx.Create(&newOrder).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
-
-	fmt.Println("SUCCESS CRETE ORDER")
-	fmt.Println(&newOrder)
 
 	for _, product := range order.Products {
 		orderItem := OrderItems{
@@ -104,8 +99,6 @@ func (p *orderRepository) CreateOrder(ctx context.Context, order requests.Create
 		}
 
 		if err := tx.Create(&orderItem).Error; err != nil {
-			fmt.Println("FAILED CRETE ORDER ITEM")
-			fmt.Println(&orderItem)
 			tx.Rollback()
 			return nil, err
 		}

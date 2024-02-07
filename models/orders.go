@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type OrderStatus string
@@ -43,6 +45,7 @@ type OrderItems struct {
 	Price     float64   `json:"price" validate:"required"`
 	Products  *Products `json:"products"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
